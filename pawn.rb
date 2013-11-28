@@ -1,5 +1,3 @@
-require_relative "pieces"
-
 class Pawn < Piece
   attr_reader :direction
 
