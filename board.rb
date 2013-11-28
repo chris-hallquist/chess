@@ -19,26 +19,14 @@ class Board
       square = Pawn.new([6,index], self, :black)
     end
 
-    @grid[0][0] = Rook.new([0,0], self, :white)
-    @grid[0][7] = Rook.new([0,7], self, :white)
-    @grid[7][0] = Rook.new([7,0], self, :black)
-    @grid[7][7] = Rook.new([7,7], self, :black)
-
-    @grid[0][1] = Knight.new([0,1], self, :white)
-    @grid[0][6] = Knight.new([0,6], self, :white)
-    @grid[7][1] = Knight.new([7,1], self, :black)
-    @grid[7][6] = Knight.new([7,6], self, :black)
-
-    @grid[0][2] = Bishop.new([0,2], self, :white)
-    @grid[0][5] = Bishop.new([0,5], self, :white)
-    @grid[7][2] = Bishop.new([7,2], self, :black)
-    @grid[7][5] = Bishop.new([7,5], self, :black)
-
-    @grid[0][3] = Queen.new([0,3], self, :white)
-    @grid[7][3] = Queen.new([7,3], self, :black)
-
-    @grid[0][4] = King.new([0,4], self, :white)
-    @grid[7][4] = King.new([7,4], self, :black)
+    back_row = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
+    back_row.each_with_index do |klass, i|
+      klass.new([0, i], self, :white)
+    end
+    back_row = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
+    back_row.each_with_index do |klass, i|
+      klass.new([7, i], self, :black)
+    end
   end
 
   def occupied?(position)
@@ -122,18 +110,30 @@ class Board
 
   def display
     display = ""
+    green_square = false
     @grid.reverse.each do |row|
       row.each do |square|
+
         if square == nil
-          display << "_"
+          display << "  "
         else
-          display << square.to_s
+          display << "#{square.to_s} "
         end
-        display << "|"
+        display[-2..-1] = color_square(display[-2..-1], green_square)
+        green_square = !green_square
       end
       display << "\n"
+      green_square = !green_square
     end
     puts display
+  end
+
+  def color_square(square, green_square)
+    if green_square
+      square = square.black.on_green
+    else
+      square = square.black.on_white
+    end
   end
 end
 
