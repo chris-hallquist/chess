@@ -52,18 +52,6 @@ class Board
     false
   end
 
-  def other_color(color)
-    color == :white ? :black : :white
-  end
-
-  def each_with_coords(&prc)
-    @grid.each_with_index do |row, row_index|
-      row.each_with_index do |square, col_index|
-        prc.call(square, row_index, col_index)
-      end
-    end
-  end
-
   def move!(start, final)
     piece = @grid[start[0]][start[1]]
     @grid[final[0]][final[1]] = piece
@@ -111,9 +99,9 @@ class Board
   def display
     display = ""
     green_square = false
-    @grid.reverse.each do |row|
+    @grid.reverse.each_with_index do |row, index|
+      display << "#{7 - index} "
       row.each do |square|
-
         if square == nil
           display << "  "
         else
@@ -126,6 +114,20 @@ class Board
       green_square = !green_square
     end
     puts display
+    puts "  0 1 2 3 4 5 6 7 "
+  end
+
+  private
+  def other_color(color)
+    color == :white ? :black : :white
+  end
+
+  def each_with_coords(&prc)
+    @grid.each_with_index do |row, row_index|
+      row.each_with_index do |square, col_index|
+        prc.call(square, row_index, col_index)
+      end
+    end
   end
 
   def color_square(square, green_square)
